@@ -128,15 +128,19 @@ const SigninService = async (body) => {
     };
   } else {
     // kiểm tra tài khoản tồn tại trong Account chưa
-    const data = await Account.find({ Gmail });
-    if (data) {
-      const hashPassword = data[0].Password;
+    const data = await Account.findOne({ Gmail });
+    console.log(data);
+    if (data != null) {
+      const hashPassword = data.Password;
       const result = bcrypt.compare(Password, hashPassword);
       try {
         if (result) {
+          const id = data._id;
+          const token = createToken(id);
           return {
             msg: 'Sign In Successful ',
             statusCode: 200,
+            data: token,
           };
         } else {
           return {

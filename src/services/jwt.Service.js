@@ -15,7 +15,7 @@ function createToken(data) {
   );
 }
 
-function verify(req, res, next) {
+async function verify(req, res, next) {
   const header = req.headers.authorization;
   //headers
   /*
@@ -46,7 +46,8 @@ function verify(req, res, next) {
       });
       return;
     } else {
-      console.log(decodedFromToken);
+      //console.log(decodedFromToken.data);
+      const idUser = decodedFromToken.data;
       // there's decodedFromToken.user that can only be reached with casting
       // that's why it is wrapped in <{user: object}>
       // const decoded = <{user: object}>decodedFromToken;
@@ -56,7 +57,7 @@ function verify(req, res, next) {
 
       req.value = { body: { token: decodedFromToken } };
 
-      next();
+      next(idUser);
     }
   });
 }

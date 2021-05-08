@@ -35,9 +35,20 @@ const CustommerSchema = new Schema(
     Role: {
       type: String,
     },
+    Vetify: {
+      type: String,
+    },
+    Token: {
+      type: String,
+    },
+    DigitalWallet: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     _id: false,
+    timestamps: true,
   },
 );
 

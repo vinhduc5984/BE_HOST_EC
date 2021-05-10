@@ -18,4 +18,16 @@ router.post(
 );
 router.post('/vetify', jwt.verify, customController.vetifyCustomer);
 
+router.post(
+  '/forget',
+  validate.validateBody(SchemaCustomer.forgetpassword),
+  customController.forgetPassword,
+);
+router.post(
+  '/changepassword',
+  validate.validateBody(SchemaCustomer.changepassword),
+  jwt.verify,
+  customController.changepassword,
+);
+
 module.exports = router;

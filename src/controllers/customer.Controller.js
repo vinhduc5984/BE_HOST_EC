@@ -46,4 +46,40 @@ const signin = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
-module.exports = { signup, signin, vetifyCustomer };
+const forgetPassword = async (req, res, next) => {
+  const resService = await customerService.ForgetPasswordService(req.body);
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
+const changepassword = async (req, res, next) => {
+  const tokenID = req.value.body.token.data;
+  const resService = await customerService.ChangePasswordService(
+    tokenID,
+    req.body,
+  );
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
+module.exports = {
+  signup,
+  signin,
+  vetifyCustomer,
+  forgetPassword,
+  changepassword,
+};

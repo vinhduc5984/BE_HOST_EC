@@ -13,5 +13,14 @@ const SchemaCustomer = {
     Phone: joi.string(),
     Address: joi.string(),
   }),
+  forgetpassword: joi.object().keys({
+    Gmail: joi.string().email().required(),
+  }),
+  changepassword: joi.object().keys({
+    Password: joi.string().required(),
+    NewPassword: joi.string().required(),
+    ConfirmPassword: joi.string().required(),
+  }),
 };
+
 module.exports = SchemaCustomer;

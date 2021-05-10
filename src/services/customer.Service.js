@@ -173,7 +173,7 @@ const SigninService = async (body) => {
     console.log(data);
     if (data != null) {
       const hashPassword = data.Password;
-      const result = bcrypt.compare(Password, hashPassword);
+      const result = await bcrypt.compare(Password, hashPassword);
       try {
         if (result) {
           const id = data._id;
@@ -210,4 +210,84 @@ const SigninService = async (body) => {
   }
 };
 
-module.exports = { SignupService, SigninService, VetifyService };
+// forget password
+const ForgetPasswordService = async (body) => {
+  try {
+    let { Gmail } = body;
+    Gmail = Gmail.trim();
+    const data = await Account.findOne({ Gmail });
+    const dataCus = await Customer.findOne({ Gmail });
+    let random = rand.int((min = 0), (max = 999999));
+    random = random + '';
+    if (data) {
+      const saltOrRound = 8;
+      const hassPassword = await bcrypt.hash(random, saltOrRound);
+      data.Password = hassPassword;
+      await data.save();
+      dataCus.Password = hassPassword;
+      await dataCus.save();
+      const resMail = SendMailVetify(
+        Gmail,
+        'Mật Khẩu mới của bạn',
+        random,
+        null,
+      );
+      return {
+        msg: 'Get Password Success',
+        statusCode: 200,
+      };
+    } else {
+      return {
+        msg: 'Get Password false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// change password
+const ChangePasswordService = async (IDToken, body) => {
+  let { Password, NewPassword, ConfirmPassword } = body;
+  Password = Password.trim();
+  NewPassword = NewPassword.trim();
+  ConfirmPassword = ConfirmPassword.trim();
+
+  const data = await Account.findOne({ _id: IDToken });
+
+  const hashPassword = data.Password;
+  const result = await bcrypt.compare(Password, hashPassword);
+  if (result) {
+    if (NewPassword === ConfirmPassword) {
+      const saltOrRound = 8;
+      const HashNewPassword = await bcrypt.hash(NewPassword, saltOrRound);
+      data.Password = HashNewPassword;
+      await data.save();
+      const dataCus = await Customer.findOne({ _id: IDToken });
+      dataCus.Password = HashNewPassword;
+      await dataCus.save();
+      return {
+        msg: 'Change Password Success',
+        statusCode: 200,
+      };
+    } else {
+      return {
+        msg: 'New Password and Comfirm Password not match',
+        statusCode: 300,
+      };
+    }
+  } else {
+    return {
+      msg: 'Error white change Password',
+      statusCode: 300,
+    };
+  }
+};
+module.exports = {
+  SignupService,
+  SigninService,
+  VetifyService,
+  ForgetPasswordService,
+  ChangePasswordService,
+};

@@ -13,7 +13,7 @@ router.get('/ken', (req, res, next) => {
   res.json({
     name: 'Lam Hoang An',
     age: '222228888',
-    hoby: '123',
+    hoby: 'cute123',
   });
 });
 

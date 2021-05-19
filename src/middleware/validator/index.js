@@ -7,7 +7,7 @@ const validateBody = (schema) => {
       return res.status(400).json(validatorResult.error.details[0].message);
     if (!req.value) req.value = {};
     if (!req.value['body']) req.value.body = {};
-    req.value.body = validatorResult.value;
+    req.value.body = { ...req.value.body, ...validatorResult.value };
     next();
   };
 };

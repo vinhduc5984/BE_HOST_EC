@@ -82,12 +82,13 @@ const SignupService = async (body) => {
               Vetify: random,
             });
             await newAccount.save();
-            const resMail = SendMailVetify(
+            const resMail = await SendMailVetify(
               resSave.Gmail,
               'Xác Thực Tài Khoản',
               resSave.Vetify,
               null,
             );
+            console.log(newAccount);
             console.log(resMail);
             const DataUser = resSave.Token;
             return {
@@ -284,10 +285,50 @@ const ChangePasswordService = async (IDToken, body) => {
     };
   }
 };
+
+const getUserData = async (body) => {
+  let { id } = body;
+  const data = await Customer.findOne({ _id: id });
+  if (!data) {
+    return {
+      msg: 'Error whilte get data User',
+      statusCode: 300,
+    };
+  } else {
+    return {
+      msg: 'get Data Account',
+      statusCode: 200,
+      data: data,
+    };
+  }
+};
+
+const UpdateDataCustomer = async (id, body) => {
+  try {
+    console.log(id);
+    const data = await Customer.findOneAndUpdate({ _id: ~~id }, body);
+    console.log(data);
+    //check data null
+    return {
+      msg: 'update Data Customer',
+      statusCode: 200,
+      data: data,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error whilte update data Customer',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
   SigninService,
   VetifyService,
   ForgetPasswordService,
   ChangePasswordService,
+  getUserData,
+  UpdateDataCustomer,
 };

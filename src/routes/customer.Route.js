@@ -30,4 +30,13 @@ router.post(
   customController.changepassword,
 );
 
+router.get('/getUser', jwt.verify, customController.getDataUSer);
+
+router.post(
+  '/updateCustomer',
+  jwt.verify,
+  validate.validateBody(SchemaCustomer.updatecustomer),
+  customController.updateDataCustomer,
+);
+
 module.exports = router;

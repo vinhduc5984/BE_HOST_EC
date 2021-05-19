@@ -18,7 +18,6 @@ const SignupService = async (body) => {
   TIN = TIN.trim();
   BusinessLicense = BusinessLicense.trim();
   Logo = Logo.trim();
-  CompanyGmail = CompanyGmail.trim();
   Address = Address.trim();
 
   console.log(CompanyGmail);
@@ -36,17 +35,16 @@ const SignupService = async (body) => {
         // Hash password
         // const saltOrRound = 8;
         // const hassPassword = await bcrypt.hash(Password, saltOrRound);
-
+        console.log('newComp1111');
         const newCompany = new Company({
           CompanyName,
           TIN,
           Address,
           BusinessLicense,
           Logo,
-          CompanyGmail,
+          CompanyGmail: CompanyGmail,
           Description: '',
           Delegate,
-          Commission: '',
           RegistrationPackage: '',
           Status: 'false',
         });
@@ -69,4 +67,22 @@ const SignupService = async (body) => {
   }
 };
 
-module.exports = { SignupService };
+const getDataCompanies = async (body) => {
+  let { id } = body;
+  const DataCom = await Company.findById(id);
+  console.log(DataCom);
+  if (!DataCom) {
+    return {
+      msg: 'not found data Com',
+      statusCode: 300,
+    };
+  } else {
+    return {
+      msg: 'get data company successful',
+      statusCode: 200,
+      data: DataCom,
+    };
+  }
+};
+
+module.exports = { SignupService, getDataCompanies };

@@ -55,6 +55,7 @@ const CompanySchema = new schema({
   Commission: {
     // tiền hoa hồng
     type: Number,
+    default: 0,
   },
   RegistrationPackage: {
     type: String,

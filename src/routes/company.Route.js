@@ -11,4 +11,6 @@ router.post(
   companyController.signup,
 );
 
+router.post('/getDataCompany', companyController.getdatacom);
+
 module.exports = router;

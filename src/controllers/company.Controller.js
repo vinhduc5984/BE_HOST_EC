@@ -14,4 +14,17 @@ const signup = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
-module.exports = { signup };
+const getdatacom = async (req, res, next) => {
+  const resService = await CompanyService.getDataCompanies(req.body);
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
+module.exports = { signup, getdatacom };

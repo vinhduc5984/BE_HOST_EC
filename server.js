@@ -17,5 +17,7 @@ app.use(morgan("dev"))
 app.use('/api_customer',route);
 app.use('/bill_api',route);
 
+app.use('/costSheet',route);
+
 const port = process.env.PORT;
 app.listen(port,()=>console.log(`http://localhost:${port}`))

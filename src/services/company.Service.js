@@ -3,6 +3,7 @@ const { SendMailVetify } = require('./SendMail.Service');
 const bcrypt = require('bcrypt');
 
 const Company = require('../models/company.Model');
+const CostSheet = require('../models/costSheet.Model');
 
 const SignupService = async (body) => {
   let {
@@ -85,4 +86,64 @@ const getDataCompanies = async (body) => {
   }
 };
 
-module.exports = { SignupService, getDataCompanies };
+const creatCostSheet = async (body) => {
+  let { CompanyId, Kg, Cost, Surcharge, VAT } = body;
+
+  try {
+    const company = await CostSheet.find({ CompanyId });
+    if (company) {
+      if (company.length > 0) {
+        return {
+          msg: 'CostSheet of Company is existed',
+          statusCode: 300,
+        };
+      } else {
+        console.log('newCostSheet');
+        const newCostSheet = new CostSheet({
+          CompanyId,
+          Kg,
+          Cost,
+          Surcharge,
+          VAT,
+        });
+        console.log('newCostSheet', newCostSheet);
+        const resSave = await newCostSheet.save();
+        return {
+          msg: 'Create new CostSheet Successful',
+          statusCode: 200,
+        };
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error Create CostSheet',
+      statusCode: 300,
+    };
+  }
+};
+
+const getCostSheet = async (body) => {
+  let { CompanyId } = body;
+  const costSheet = await CostSheet.find({ CompanyId });
+  console.log(costSheet);
+  if (!costSheet) {
+    return {
+      msg: 'not found CostSheet of Company',
+      statusCode: 300,
+    };
+  } else {
+    return {
+      msg: 'get data CostSheet of company successful',
+      statusCode: 200,
+      data: costSheet,
+    };
+  }
+};
+
+module.exports = {
+  SignupService,
+  getDataCompanies,
+  creatCostSheet,
+  getCostSheet,
+};

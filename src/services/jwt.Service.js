@@ -16,50 +16,65 @@ function createToken(data) {
 }
 
 async function verify(req, res, next) {
-  const header = req.headers.authorization;
-  //headers
-  /*
-        authorization
-        content
-    */
-  console.log(header);
+  try {
+    const header = req.headers.authorization;
+    //headers
+    /*
+          authorization
+          content
+      */
 
-  if (!header) {
-    res.json({
-      data: {
-        tokenVerificationData: { access: false, message: 'No token provided' },
-      },
-    });
-    return;
-  }
-  const token = header.split(' ')[1];
-  console.log('tokenService token: ' + token);
-  jwt.verify(token, serectKey, (err, decodedFromToken) => {
-    if (err) {
+    if (!header) {
       res.json({
         data: {
           tokenVerificationData: {
             access: false,
-            message: 'Failed to verify token',
+            message: 'No token provided',
           },
         },
       });
       return;
-    } else {
-      //console.log(decodedFromToken.data);
-      const idUser = decodedFromToken.data;
-      // there's decodedFromToken.user that can only be reached with casting
-      // that's why it is wrapped in <{user: object}>
-      // const decoded = <{user: object}>decodedFromToken;
-      // const decodedUser = <ISafeUser>decoded.user;
-      // // res.json({tokenVerificationData: { access: true, user: decodedUser } });
-      // req.verifiedUser = decodedUser;
-
-      req.value = { body: { token: decodedFromToken } };
-
-      next(idUser);
     }
-  });
+    const token = header.split(' ')[1];
+    console.log('tokenService token : ' + token);
+    jwt.verify(token, serectKey, (err, decodedFromToken) => {
+      if (err) {
+        console.log('err');
+        res.json({
+          data: {
+            tokenVerificationData: {
+              access: false,
+              message: 'Failed to verify token',
+            },
+          },
+        });
+        return;
+      } else {
+        //console.log(decodedFromToken.data);
+        const idUser = decodedFromToken.data;
+        // there's decodedFromToken.user that can only be reached with casting
+        // that's why it is wrapped in <{user: object}>
+        // const decoded = <{user: object}>decodedFromToken;
+        // const decodedUser = <ISafeUser>decoded.user;
+        // // res.json({tokenVerificationData: { access: true, user: decodedUser } });
+        // req.verifiedUser = decodedUser;
+        if (!req.value) req.value = {};
+        if (!req.value.body) req.value.body = {};
+        req.value = { body: { token: decodedFromToken } };
+        next();
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      data: {
+        tokenVerificationData: {
+          access: false,
+          message: 'Failed to verify token',
+        },
+      },
+    });
+  }
 }
 
 module.exports = { verify, createToken };

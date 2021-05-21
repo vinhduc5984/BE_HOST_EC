@@ -10,6 +10,7 @@ const AccountSchema = new schema({
   },
   Password: { type: String, required: true },
   Role: { type: String, required: true },
+  Vetify: { type: String },
 });
 
 const Account = mongoose.model('Account', AccountSchema);

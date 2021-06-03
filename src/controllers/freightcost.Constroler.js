@@ -1,8 +1,8 @@
 const controller = require('./index');
-const CaulatorService = require('../services/Caculator.Service');
+const FreightCostService = require('../services/freightcost.Service');
 
-const Caculator = async (req, res, next) => {
-  const ResService = await CaulatorService.Caculator(req.body);
+const freightcost = async (req, res, next) => {
+  const ResService = await FreightCostService.FreightCost(req.body);
   if (ResService.statusCode === 200) {
     return controller.sendSuccess(
       res,
@@ -14,4 +14,4 @@ const Caculator = async (req, res, next) => {
   return controller.sendSuccess(res, {}, ResService.statusCode, ResService.msg);
 };
 
-module.exports = { Caculator };
+module.exports = { freightcost };

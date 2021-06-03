@@ -1,7 +1,7 @@
 const CostSheet = require('../models/costSheet.Model');
 const dateFormat = require('dateformat');
 
-const Caculator = async (body) => {
+const FreightCost = async (body) => {
   let { Kg, Km } = body;
   try {
     const Company = await CostSheet.find({});
@@ -68,17 +68,17 @@ const Caculator = async (body) => {
     }
     console.log(objCosts);
     return {
-      msg: 'Caculator successful',
+      msg: 'Caculator Freight Cost successful',
       statusCode: 200,
       data: objCosts,
     };
   } catch (err) {
     console.log(err);
     return {
-      msg: 'Error Caculator',
+      msg: 'Error Freight Cost Caculator',
       statusCode: 300,
     };
   }
 };
 
-module.exports = { Caculator };
+module.exports = { FreightCost };

@@ -19,7 +19,7 @@ const SignupService = async (body) => {
   TIN = TIN.trim();
   BusinessLicense = BusinessLicense.trim();
   Logo = Logo.trim();
-  Address = Address.trim();
+  Addrexss = Address.trim();
 
   console.log(CompanyGmail);
   // check exist Gmail
@@ -207,27 +207,24 @@ const deleteKm = async (body) => {
       };
     } else {
       const Cost = company[0].Cost;
-      Km = Number(Km);
-      const popCost = Cost[Cost.length - 1];
-      var numKm = popCost.Km.match(/\d/gi);
-      numKm = numKm.join('');
 
-      if (Km == Number(numKm)) {
+      const popCost = Cost[Cost.length - 1];
+      if (Km == popCost.Km) {
         Cost.pop();
-      } else
+      } else {
+        Km = Number(Km);
         for (const j in Cost) {
           const km = Number(Cost[j].Km);
           if (km == Km) {
             Cost.splice(j, 1);
             break;
           }
-
           return {
-            msg: 'not found km of CostSheet',
-            statusCode: 300,
+            msg: 'not found Km of Cosheet',
+            statusCode: 200,
           };
         }
-
+      }
       const Kg = company[0].Kg;
       const Surcharge = company[0].Surcharge;
       const VAT = company[0].VAT;

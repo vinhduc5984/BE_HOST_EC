@@ -1,4 +1,5 @@
 const CostSheet = require('../models/costSheet.Model');
+const Promotion = require('../models/promotion.Model');
 const dateFormat = require('dateformat');
 
 const FreightCost = async (body) => {
@@ -46,6 +47,30 @@ const FreightCost = async (body) => {
       var FinalCost = sur + Number(index.Cost);
       FinalCost = (FinalCost + FinalCost * Number(data.VAT)) * 1000;
       FinalCost = Math.round(FinalCost * 100) / 100;
+
+      //Check Promotion
+      const CompanyId = data.CompanyId;
+      const promotion = await Promotion.find({ CompanyId });
+      if (promotion.length > 0) {
+        const description = promotion[0].Description;
+        var n = description.length - 1;
+        var StartDate = description[n].StartDate;
+        var startDate = StartDate.split('/');
+        StartDate = new Date(startDate[2], startDate[1] - 1, startDate[0]);
+
+        if (now.getDate() >= StartDate.getDate()) {
+          var EndDate = description[n].EndDate;
+          var endDate = EndDate.split('/');
+          EndDate = new Date(endDate[2], endDate[1] - 1, endDate[0]);
+          if (now.getDate() <= EndDate.getDate()) {
+            var Discount = description[n].Discount;
+            var discount = Discount.match(/\d/gi);
+            discount = discount.join('');
+            FinalCost = FinalCost - (FinalCost * Number(discount)) / 100;
+            FinalCost = Math.round(FinalCost * 100) / 100;
+          }
+        }
+      }
 
       //Caculator Delivery Time
       const numDay = index.DeliveryTime.split('-').map(Number);

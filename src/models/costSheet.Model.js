@@ -17,9 +17,6 @@ const CostSheetSchema = new schema({
       Km: { type: String, require: true, unique: true },
       Cost: { type: String, require: true },
       DeliveryTime: { type: String, require: true },
-      PromotionPrice: String,
-      StartDate: String,
-      EndDate: String,
     },
   ],
   Surcharge: {

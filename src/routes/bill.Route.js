@@ -13,4 +13,8 @@ router.post(
   billController.CreateBill,
 );
 
+router.post('/ChangeStatusBill', billController.ChangeStatusBill);
+
+router.get('/FindBill', jwt.verify, billController.FindBillOfCustomer);
+
 module.exports = router;

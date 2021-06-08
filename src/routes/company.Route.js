@@ -12,5 +12,6 @@ router.post(
 );
 
 router.post('/getDataCompany', companyController.getdatacom);
+router.get('/getListCompanyToVerify', companyController.GetListDataToVerify);
 
 module.exports = router;

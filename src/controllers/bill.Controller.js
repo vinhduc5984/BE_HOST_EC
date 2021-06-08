@@ -28,4 +28,19 @@ const ChangeStatusBill = async (req, res, next) => {
   return controller.sendSuccess(res, {}, ResService.statusCode, ResService.msg);
 };
 
-module.exports = { CreateBill, ChangeStatusBill };
+const FindBillOfCustomer = async (req, res, next) => {
+  const tokenID = req.value.body.token.data;
+  console.log(tokenID);
+  const ResService = await BillService.FindBillByID(tokenID);
+  if (ResService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      ResService.data,
+      ResService.statusCode,
+      ResService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, ResService.statusCode, ResService.msg);
+};
+
+module.exports = { CreateBill, ChangeStatusBill, FindBillOfCustomer };

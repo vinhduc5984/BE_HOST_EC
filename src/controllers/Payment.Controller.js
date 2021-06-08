@@ -95,6 +95,7 @@ const PaymentSuccess = async (req, res, next) => {
         console.log(error.response);
         throw error;
       } else {
+        // lưu bill ngay đây....
         console.log(JSON.stringify(payment));
         res.send('Success');
       }

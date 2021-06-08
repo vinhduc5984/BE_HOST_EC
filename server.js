@@ -18,5 +18,8 @@ app.use('/api_customer',route);
 app.use('/bill_api',route);
 app.use('/paypal_api',route);
 app.get('/', (req, res) => res.sendFile(__dirname + "/index.html"));
+
+app.use('/costSheet',route);
+
 const port = process.env.PORT;
 app.listen(port,()=>console.log(`http://localhost:${port}`))

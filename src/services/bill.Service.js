@@ -6,7 +6,7 @@ const CreateBill = async (TokenID, body) => {
   let {
     Sender,
     Receiver,
-    ProductID,
+    ProductName,
     CompanyID,
     Cost,
     ModeofPayment,
@@ -19,32 +19,35 @@ const CreateBill = async (TokenID, body) => {
   } = body;
 
   const dataSender = await Customer.findById(TokenID);
+  console.log(dataSender);
   if (!dataSender) {
     return {
       msg: 'Not found the sender',
       statusCode: 300,
     };
   }
-  const BillCustomer = new Bill({
+  const reqData = {
     Sender: {
-      id: TokenID,
+      id: dataSender._id,
       Name: `${dataSender.LastName}_${dataSender.FirstName}`,
       Phone: dataSender.Phone,
       Address: dataSender.Address,
     },
     Receiver,
-    ProductID,
+    ProductName,
     CompanyID,
     Cost,
     ModeofPayment,
-    Notes,
+    Notes: Notes,
     Status,
     CreateDate,
     DeliveryDate,
     ReceivedDate,
     CancelDate,
-  });
+  };
+  console.log(reqData.Notes);
 
+  const BillCustomer = new Bill(reqData);
   const BillRes = await BillCustomer.save();
   if (BillRes) {
     console.log(BillRes);
@@ -92,4 +95,34 @@ const ChangeStatusBill = async (body) => {
   }
 };
 
-module.exports = { CreateBill, ChangeStatusBill };
+// Tìm tất cả các hóa đơn của người dùng
+const FindBillByID = async (TokenID) => {
+  const count = 0;
+  console.log(TokenID);
+  const BillData = await Bill.find({ 'Sender.id': TokenID });
+  console.log(BillData);
+  // return {
+  //   msg:"Chua co hoa don nao",
+  //   statusCode:300,
+  // }
+  // await BillData.forEach(element => {
+  //     if(element.Sender.id === TokenID)
+  //     {
+  //         count++;
+  //     }
+  // });
+  if (BillData.length == 0) {
+    return {
+      msg: 'Chua co hoa don nao',
+      statusCode: 300,
+    };
+  } else {
+    return {
+      msg: 'find Bill Successful',
+      statusCode: 200,
+      data: BillData,
+    };
+  }
+};
+
+module.exports = { CreateBill, ChangeStatusBill, FindBillByID };

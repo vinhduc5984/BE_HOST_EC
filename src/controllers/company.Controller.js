@@ -27,6 +27,19 @@ const getdatacom = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const GetListDataToVerify = async (req, res, next) => {
+  const resService = await CompanyService.getListCompanyToVerify();
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
 const createcostsheet = async (req, res, next) => {
   const resService = await CompanyService.creatCostSheet(req.body);
   if (resService.statusCode === 200) {

@@ -86,6 +86,25 @@ const getDataCompanies = async (body) => {
   }
 };
 
+const getListCompanyToVerify = async () => {
+  const DataCom = await Company.find({ Status: 'false' });
+  const length = DataCom.length;
+  console.log(DataCom[0].Delegate.FirstName);
+
+  if (length == 0) {
+    return {
+      msg: 'Not get list data Company',
+      statusCode: 300,
+    };
+  } else {
+    console.log(length);
+    return {
+      msg: 'get list data Company Successful',
+      statusCode: 200,
+    };
+  }
+};
+
 const creatCostSheet = async (body) => {
   let { CompanyId, Kg, Cost, Surcharge, VAT } = body;
 

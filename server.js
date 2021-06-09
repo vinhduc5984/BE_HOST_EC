@@ -16,6 +16,8 @@ app.use(morgan("dev"))
 
 app.use('/api_customer',route);
 app.use('/bill_api',route);
+app.use('/paypal_api',route);
+app.get('/', (req, res) => res.sendFile(__dirname + "/index.html"));
 
 app.use('/freightcost',route);
 

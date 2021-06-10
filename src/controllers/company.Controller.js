@@ -66,4 +66,10 @@ const getdatacost = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
-module.exports = { signup, getdatacom, createcostsheet, getdatacost };
+module.exports = {
+  signup,
+  getdatacom,
+  createcostsheet,
+  getdatacost,
+  GetListDataToVerify,
+};

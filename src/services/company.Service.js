@@ -267,6 +267,7 @@ const deleteKm = async (body) => {
 
 module.exports = {
   SignupService,
+  getListCompanyToVerify,
   getDataCompanies,
   creatCostSheet,
   getCostSheet,

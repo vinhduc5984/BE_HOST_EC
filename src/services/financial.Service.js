@@ -129,6 +129,31 @@ const getAccounting = async (body) => {
   }
 };
 
+const deleteAccounting = async (body) => {
+  let { CreateDate } = body;
+  try {
+    const accounting = await Accounting.find({ CreateDate });
+    if (accounting.length <= 0) {
+      return {
+        msg: 'not found accounting',
+        statusCode: 300,
+      };
+    } else {
+      await Accounting.deleteOne({ CreateDate });
+      return {
+        msg: 'delete accounting successful',
+        statusCode: 200,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error delete accounting',
+      statusCode: 300,
+    };
+  }
+};
+
 const createRevenue = async (body) => {
   let { CreateDate, OtherPayable } = body;
 
@@ -170,7 +195,7 @@ const createRevenue = async (body) => {
   } catch (err) {
     console.log(err);
     return {
-      msg: 'Error Create Accounting',
+      msg: 'Error Create Revenue',
       statusCode: 300,
     };
   }
@@ -202,9 +227,37 @@ const getRevenue = async (body) => {
   }
 };
 
+const deleteRevenue = async (body) => {
+  let { CreateDate } = body;
+  try {
+    const revenue = await Revenue.find({ CreateDate });
+    console.log(revenue);
+    if (revenue.length <= 0) {
+      return {
+        msg: 'not found revenue',
+        statusCode: 300,
+      };
+    } else {
+      await Revenue.deleteOne({ CreateDate });
+      return {
+        msg: 'delete revenue successful',
+        statusCode: 200,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error delete Revenue',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   createAccounting,
   getAccounting,
+  deleteAccounting,
   createRevenue,
   getRevenue,
+  deleteRevenue,
 };

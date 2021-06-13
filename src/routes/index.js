@@ -9,7 +9,6 @@ const freightcost = require('./freightcost.Route');
 const financial = require('./financial.Route');
 const promotion = require('./promotion.Route');
 const payment = require('./Payment.Route');
-const costSheet = require('./freightcost.Route');
 
 router.use('/auth', customer);
 router.use('/user', user);
@@ -24,6 +23,5 @@ router.use('/revenue', financial);
 
 router.use('/', promotion);
 router.use('/payment', payment);
-router.use('/cost', costSheet);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const CostSheet = require('../models/costSheet.Model');
 const Promotion = require('../models/promotion.Model');
 const dateFormat = require('dateformat');
 
-const FreightCost = async (body) => {
+const caculatorCost = async (body) => {
   let { Kg, Km } = body;
   try {
     const Company = await CostSheet.find({});
@@ -106,4 +106,4 @@ const FreightCost = async (body) => {
   }
 };
 
-module.exports = { FreightCost };
+module.exports = { caculatorCost };

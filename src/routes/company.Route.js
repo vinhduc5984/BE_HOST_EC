@@ -15,5 +15,8 @@ router.post('/getDataCompany', companyController.getdatacom);
 router.get('/getListCompanyToVerify', companyController.GetListDataToVerify);
 router.post('/createCostSheet', companyController.createcostsheet);
 router.post('/getDataCost', companyController.getdatacost);
+router.post('/editCostSheet', companyController.editcostsheet);
+router.post('/deleteCostSheet', companyController.deletecostsheet);
+router.post('/deleteKm', companyController.deletekm);
 
 module.exports = router;

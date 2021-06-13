@@ -19,7 +19,7 @@ const SignupService = async (body) => {
   TIN = TIN.trim();
   BusinessLicense = BusinessLicense.trim();
   Logo = Logo.trim();
-  Address = Address.trim();
+  Addrexss = Address.trim();
 
   console.log(CompanyGmail);
   // check exist Gmail
@@ -153,7 +153,7 @@ const getCostSheet = async (body) => {
   let { CompanyId } = body;
   const costSheet = await CostSheet.find({ CompanyId });
   console.log(costSheet);
-  if (!costSheet) {
+  if (costSheet.length <= 0) {
     return {
       msg: 'not found CostSheet of Company',
       statusCode: 300,
@@ -167,10 +167,119 @@ const getCostSheet = async (body) => {
   }
 };
 
+const editCostSheet = async (body) => {
+  let { CompanyId, Kg, Cost, Surcharge, VAT } = body;
+  try {
+    const costSheet = await CostSheet.find({ CompanyId });
+    console.log(costSheet);
+    if (costSheet.length <= 0) {
+      return {
+        msg: 'not found CostSheet of Company',
+        statusCode: 300,
+      };
+    } else {
+      const value = { CompanyId, Kg, Cost, Surcharge, VAT };
+      const resave = await CostSheet.updateOne({ CompanyId }, value);
+      const NewCostSheet = await CostSheet.find({ CompanyId });
+      return {
+        msg: 'update CostSheet of company successful',
+        statusCode: 200,
+        data: NewCostSheet,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error while update CostSheet of company',
+      statusCode: 300,
+    };
+  }
+};
+
+const deleteCostSheet = async (body) => {
+  let { CompanyId } = body;
+  try {
+    const costSheet = await CostSheet.find({ CompanyId });
+    console.log(costSheet);
+    if (costSheet.length <= 0) {
+      return {
+        msg: 'not found CostSheet of Company',
+        statusCode: 300,
+      };
+    } else {
+      const del = await CostSheet.deleteOne({ CompanyId });
+      return {
+        msg: 'delete CostSheet of company successful',
+        statusCode: 200,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error while delete CostSheet of company',
+      statusCode: 300,
+    };
+  }
+};
+
+const deleteKm = async (body) => {
+  let { CompanyId, Km } = body;
+  try {
+    const company = await CostSheet.find({ CompanyId });
+    if (company.length <= 0) {
+      return {
+        msg: 'not found CostSheet of Company',
+        statusCode: 300,
+      };
+    } else {
+      const Cost = company[0].Cost;
+
+      const popCost = Cost[Cost.length - 1];
+      if (Km == popCost.Km) {
+        Cost.pop();
+      } else {
+        Km = Number(Km);
+        for (const j in Cost) {
+          const km = Number(Cost[j].Km);
+          if (km == Km) {
+            Cost.splice(j, 1);
+            break;
+          }
+          return {
+            msg: 'not found Km of Cosheet',
+            statusCode: 200,
+          };
+        }
+      }
+      const Kg = company[0].Kg;
+      const Surcharge = company[0].Surcharge;
+      const VAT = company[0].VAT;
+      const value = { CompanyId, Kg, Cost, Surcharge, VAT };
+
+      const resave = await CostSheet.updateOne({ CompanyId }, value);
+
+      return {
+        msg: 'delete Km of CostSheet successful',
+        statusCode: 200,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error while delete Km of CostSheet',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
+  getListCompanyToVerify,
   getDataCompanies,
   creatCostSheet,
   getCostSheet,
   getListCompanyToVerify,
+  editCostSheet,
+  deleteCostSheet,
+  deleteKm,
 };

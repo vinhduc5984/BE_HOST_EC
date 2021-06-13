@@ -113,4 +113,5 @@ module.exports = {
   editcostsheet,
   deletecostsheet,
   deletekm,
+  GetListDataToVerify,
 };

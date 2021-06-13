@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PayPal Node App</title>
+</head>
+<body>
+  <h1>Thông tin đơn hàng</h1>
+  <h2>Buy For $25</h2>
+  <form action="/paypal_api/payment/PaymentPaypal" method="post">
+    <div>Tên sản phẩm</div>
+    <input type="text" name = "ProductName" >
+    <div>Tên người gửi</div>
+    <input  type="text"  name="SenderName">
+    <div>Số điện thoạn người gửi</div>
+    <input type="text" name="SenderPhone">
+    <div>Địa chỉ người gửi</div>
+    <input type="text" name="SernderAddress">
+    <div>Tên người nhận</div>
+    <input  type="text" name="ReceiverName">
+    <div>Số điện thoạn người nhận</div>
+    <input type="text" name="ReceiverPhone">
+    <div>Địa chỉ người nhận</div>
+    <input type="text" name="ReceiverAddress">
+    <div>Company ID</div>
+    <input type="text" name="CompanyID">
+    <div>Cost (VNĐ)</div>
+    <input type="text"  name="price" >
+    <div>Hình thức thanh toán</div>
+    <input type="text"  name="ModeOfpayment" >
+    <div>Ghi chú</div>
+    <input type="text"  name="Notes" >
+    <div>TokenID</div>
+    <input type="text" name="TokenID" >
+    <input type="submit" value="Buy">
+  </form>
+</body>
+</html>

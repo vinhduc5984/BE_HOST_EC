@@ -21,6 +21,11 @@ const SchemaCustomer = {
     NewPassword: joi.string().required(),
     ConfirmPassword: joi.string().required(),
   }),
+  updatecustomer: joi.object().keys({
+    FirstName: joi.string(),
+    LastName: joi.string(),
+    Phone: joi.string(),
+  }),
 };
 
 module.exports = SchemaCustomer;

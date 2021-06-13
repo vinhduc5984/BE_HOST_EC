@@ -76,10 +76,41 @@ const changepassword = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const getDataUSer = async (req, res, next) => {
+  const tokenID = req.value.body.token.data;
+  const resService = await customerService.getUserData({ id: tokenID });
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
+const updateDataCustomer = async (req, res, next) => {
+  // const TokenID = req.value.body.token?.data;
+  const { token, ...data } = req.value.body;
+  const resService = await customerService.UpdateDataCustomer(token.data, data);
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
 module.exports = {
   signup,
   signin,
   vetifyCustomer,
   forgetPassword,
   changepassword,
+  getDataUSer,
+  updateDataCustomer,
 };

@@ -17,7 +17,7 @@ const SchemaCompany = {
       Phone: joi.string().required(),
       Position: joi.string().required(),
     },
-    Commission: joi.string(),
+    Commission: joi.number(),
     RegistrationPackage: joi.string(),
     Status: joi.string(),
   }),

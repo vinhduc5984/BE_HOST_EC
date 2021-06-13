@@ -48,6 +48,7 @@ const SignupService = async (body) => {
           Delegate,
           RegistrationPackage: '',
           Status: 'false',
+          Commission: 0,
         });
         console.log('newComp', newCompany);
         // console.log(newCustomer.Gmail);
@@ -89,6 +90,7 @@ const getDataCompanies = async (body) => {
 const getListCompanyToVerify = async () => {
   const DataCom = await Company.find({ Status: 'false' });
   const length = DataCom.length;
+  const DataCompanyID = []; // lấy list is của các công ty có status = false để verify
   console.log(DataCom[0].Delegate.FirstName);
 
   if (length == 0) {
@@ -97,10 +99,15 @@ const getListCompanyToVerify = async () => {
       statusCode: 300,
     };
   } else {
+    for (let i = 0; i < length; i++) {
+      //console.log(DataCom[i]._id);
+      DataCompanyID.push(DataCom[i]._id);
+    }
     console.log(length);
     return {
       msg: 'get list data Company Successful',
       statusCode: 200,
+      data: DataCompanyID,
     };
   }
 };
@@ -165,4 +172,5 @@ module.exports = {
   getDataCompanies,
   creatCostSheet,
   getCostSheet,
+  getListCompanyToVerify,
 };

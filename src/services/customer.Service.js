@@ -188,7 +188,10 @@ const SigninService = async (body) => {
           return {
             msg: 'Sign In Successful ',
             statusCode: 200,
-            data: token,
+            data: {
+              Token: token,
+              Role: data.Role,
+            },
           };
         } else {
           return {

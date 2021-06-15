@@ -68,7 +68,6 @@ const CreateBill = async (TokenID, body) => {
 const defaultStatus = 'Da Huy';
 const objStatus = {
   ChoXacNhan: 'Cho Xac Nhan',
-  ChoLayHang: 'Cho Lay Hang',
   DangGiao: 'Dang Giao',
   DaGiao: 'Da Giao',
   DaHuy: 'Da Huy',
@@ -79,9 +78,30 @@ const getStatus = (objStatus, n) => {
 
 const ChangeStatusBill = async (body) => {
   let { BillID, Status } = body;
+  var today = new Date();
+  var time =
+    today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+  var day =
+    today.getDate() +
+    '/' +
+    (today.getMonth() + 1) +
+    '/' +
+    today.getFullYear() +
+    ' - ';
+  const currentDate = day + time;
   const DataBill = await Bill.findById(BillID);
   if (DataBill) {
-    DataBill.Status = getStatus(objStatus, Status);
+    const statusBill = getStatus(objStatus, Status);
+    if (Status === 'DangGiao') {
+      DataBill.Status = getStatus(objStatus, Status);
+      DataBill.DeliveryDate = currentDate;
+    } else if (Status === 'DaGiao') {
+      DataBill.Status = getStatus(objStatus, Status);
+      DataBill.ReceivedDate = currentDate;
+    } else if (Status === 'DaHuy') {
+      DataBill.Status = getStatus(objStatus, Status);
+      DataBill.CancelDate = currentDate;
+    }
     await DataBill.save();
     return {
       msg: 'Update Status Bill Successful',

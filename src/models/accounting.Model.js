@@ -13,6 +13,7 @@ const AccountingSchema = new schema({
       Id: String,
       Number: { type: String, require: true },
       Total: { type: String, require: true },
+      ServicePack: { type: String, retuire: true },
       ExpensePayable: { type: String, require: true },
     },
   ],

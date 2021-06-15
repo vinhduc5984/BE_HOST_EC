@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 
 const Company = require('../models/company.Model');
 const CostSheet = require('../models/costSheet.Model');
+const Account = require('../models/account.Model');
+const { findById } = require('../models/company.Model');
 
 const SignupService = async (body) => {
   let {
@@ -36,27 +38,37 @@ const SignupService = async (body) => {
         // Hash password
         // const saltOrRound = 8;
         // const hassPassword = await bcrypt.hash(Password, saltOrRound);
-        console.log('newComp1111');
-        const newCompany = new Company({
-          CompanyName,
-          TIN,
-          Address,
-          BusinessLicense,
-          Logo,
-          CompanyGmail: CompanyGmail,
-          Description: '',
-          Delegate,
-          RegistrationPackage: '',
-          Status: 'false',
-        });
-        console.log('newComp', newCompany);
-        // console.log(newCustomer.Gmail);
-        // save Customer
-        const resSave = await newCompany.save();
-        return {
-          msg: 'Sign Up Company Successful',
-          statusCode: 200,
-        };
+        const GmailAccount = await Account.findOne({ Gmail: CompanyGmail });
+
+        if (GmailAccount != null) {
+          return {
+            msg: 'Gmail is existed',
+            statusCode: 300,
+          };
+        } else {
+          console.log('newComp1111');
+          const newCompany = new Company({
+            CompanyName,
+            TIN,
+            Address,
+            BusinessLicense,
+            Logo,
+            CompanyGmail: CompanyGmail,
+            Description: '',
+            Delegate,
+            RegistrationPackage: [],
+            Status: 'false',
+            Commission: '0',
+          });
+          console.log('newComp', newCompany);
+          // console.log(newCustomer.Gmail);
+          // save Customer
+          const resSave = await newCompany.save();
+          return {
+            msg: 'Sign Up Company Successful',
+            statusCode: 200,
+          };
+        }
       }
     }
   } catch (err) {
@@ -89,6 +101,7 @@ const getDataCompanies = async (body) => {
 const getListCompanyToVerify = async () => {
   const DataCom = await Company.find({ Status: 'false' });
   const length = DataCom.length;
+  const DataCompanyID = []; // lấy list is của các công ty có status = false để verify
   console.log(DataCom[0].Delegate.FirstName);
 
   if (length == 0) {
@@ -97,10 +110,39 @@ const getListCompanyToVerify = async () => {
       statusCode: 300,
     };
   } else {
+    for (let i = 0; i < length; i++) {
+      //console.log(DataCom[i]._id);
+      DataCompanyID.push(DataCom[i]);
+    }
     console.log(length);
     return {
       msg: 'get list data Company Successful',
       statusCode: 200,
+      data: DataCompanyID,
+    };
+  }
+};
+
+const getListCompany = async () => {
+  // get list company with status = true
+  const DataCom = await Company.find({ Status: 'true' });
+  const length = DataCom.length;
+  const DataCompany = [];
+  if (length == 0) {
+    return {
+      msg: 'Not get list data Company',
+      statusCode: 300,
+    };
+  } else {
+    for (let i = 0; i < length; i++) {
+      //console.log(DataCom[i]._id);
+      DataCompany.push(DataCom[i]);
+    }
+    console.log(length);
+    return {
+      msg: 'get list data Company Successful',
+      statusCode: 200,
+      data: DataCompany,
     };
   }
 };
@@ -265,13 +307,91 @@ const deleteKm = async (body) => {
   }
 };
 
+// phê duyệt company
+const approveCompany = async (body) => {
+  let { CompanyID, Commission } = body;
+  var today = new Date();
+  var time =
+    today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+  var day =
+    today.getDate() +
+    '/' +
+    (today.getMonth() + 1) +
+    '/' +
+    today.getFullYear() +
+    ' - ';
+  var endday =
+    today.getDate() +
+    '/' +
+    (today.getMonth() + 1 + 1) +
+    '/' +
+    today.getFullYear() +
+    ' - ';
+  const FeeRegistrationPackage = {
+    PackageID: '0',
+    StartDate: day,
+    EndDate: endday,
+    Quantity: 50,
+  };
+  const RegisterPackage = [];
+  RegisterPackage.push(FeeRegistrationPackage);
+  const DataCom = await Company.findById(CompanyID);
+  try {
+    if (DataCom) {
+      DataCom.Commission = Commission;
+      DataCom.RegistrationPackage.push(FeeRegistrationPackage);
+      DataCom.Status = 'true';
+      console.log('Truoc Datacom.save()');
+      await DataCom.save();
+      console.log('Sau Datacom.save()');
+      const rand = require('random');
+      let random = rand.int((min = 0), (max = 999999));
+      const saltOrRound = 8;
+      const hassPassword = await bcrypt.hash(random.toString(), saltOrRound);
+
+      const companyAccount = new Account({
+        _id: DataCom._id.toString(),
+        Gmail: DataCom.CompanyGmail,
+        Password: hassPassword,
+        Role: 'Company',
+        Vetify: 'true',
+      });
+      await companyAccount.save();
+      await SendMailVetify(
+        DataCom.CompanyGmail,
+        'Tài khoản của công ty',
+        'Tài khoản là Email công ty, ' + 'Mật khẩu: ' + random,
+        null,
+      );
+      return {
+        msg: 'Approve Company successful',
+        statusCode: 200,
+        data: DataCom,
+      };
+    } else {
+      return {
+        msg: 'Approve Company false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error while found company',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
-  getListCompanyToVerify,
   getDataCompanies,
   creatCostSheet,
   getCostSheet,
+  getListCompanyToVerify,
+  getListCompany,
   editCostSheet,
   deleteCostSheet,
   deleteKm,
+  approveCompany,
 };

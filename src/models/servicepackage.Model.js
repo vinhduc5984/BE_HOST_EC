@@ -10,6 +10,10 @@ const ServicePackageSchema = new schema({
     type: String,
     required: true,
   },
+  Duration: {
+    type: String,
+    required: true,
+  },
   Price: {
     type: String,
     required: true,

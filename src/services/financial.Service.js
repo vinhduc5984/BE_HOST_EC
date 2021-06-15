@@ -4,6 +4,7 @@ const Bill = require('../models/bill.Model');
 const company = require('../models/company.Model');
 const Accounting = require('../models/accounting.Model');
 const Revenue = require('../models/revenue.Model');
+const ServicePackage = require('../models//servicepackage.Model');
 
 const createAccounting = async (body) => {
   let { CreateDate } = body;
@@ -30,32 +31,56 @@ const createAccounting = async (body) => {
         const bill = await Bill.find({ CompanyID });
         if (bill.length > 0) {
           var objCom = {};
+
           for (const j in bill) {
             var ReceivedDate = bill[j].ReceivedDate;
             var receivedDate = ReceivedDate.split('/');
 
+            //check bill trong thang
             if (
               Number(createDate[1]) == Number(receivedDate[1]) &&
               Number(createDate[2]) == Number(receivedDate[2])
             ) {
+              //chua co thi tao moi
               if (Object.keys(objCom) <= 0) {
                 objCom.Id = CompanyID;
                 objCom.Number = 1;
                 objCom.Total = Number(bill[j].Cost) * 1000;
-                objCom.ExpensePayable =
-                  Number(objCom.Total) *
-                  Number((100 - Number(dataCom[i].Commission)) / 100);
+                console.log(objCom.Number);
               } else {
                 objCom.Id = CompanyID;
                 objCom.Number = Number(objCom.Number) + 1;
                 objCom.Total =
                   Number(objCom.Total) + Number(bill[j].Cost) * 1000;
-                objCom.ExpensePayable =
-                  Number(objCom.Total) *
-                  Number((100 - Number(dataCom[i].Commission)) / 100);
               }
             }
           }
+
+          //Lấy gói dịch vụ công ty đăng ký
+          const package = dataCom[i].RegistrationPackage;
+          objCom.ServicePack = 0;
+          //Công ty co dang ky goi dich vu =1 la su dung goi free
+          if (package.length > 1) {
+            const popPack = package.pop();
+            const RegisterDate = popPack.StartDate;
+            var registerDate = RegisterDate.split('/');
+            //kiem tra ngay dang ky la cua thang nay
+            if (
+              Number(createDate[1]) == Number(registerDate[1]) &&
+              Number(createDate[2]) == Number(registerDate[2])
+            ) {
+              const PackageID = popPack.PackageID;
+              const servicepackage = await ServicePackage.findById(PackageID);
+              if (servicepackage) {
+                objCom.ServicePack = servicepackage.Price;
+              }
+            }
+          }
+
+          objCom.ExpensePayable =
+            Number(objCom.Total) *
+              Number((100 - Number(dataCom[i].Commission)) / 100) -
+            Number(objCom.ServicePack);
           objComs[n] = objCom;
           TotalIncome = Number(TotalIncome) + Number(objCom.Total);
           TotalPayable = Number(TotalPayable) + Number(objCom.ExpensePayable);

@@ -54,11 +54,12 @@ const CompanySchema = new schema({
   },
   Commission: {
     // tiền hoa hồng
-    type: Number,
+    type: String,
     default: '',
   },
   RegistrationPackage: {
-    type: String,
+    type: [Object],
+    default: [],
   },
   Status: {
     type: String,

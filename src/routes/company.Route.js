@@ -18,5 +18,11 @@ router.post('/getDataCost', companyController.getdatacost);
 router.post('/editCostSheet', companyController.editcostsheet);
 router.post('/deleteCostSheet', companyController.deletecostsheet);
 router.post('/deleteKm', companyController.deletekm);
+router.get('/getListCompanyTrue', companyController.GetListCompanyTrue);
+router.post(
+  '/ApproveCompany',
+  validate.validateBody(SchemaCompany.approveCom),
+  companyController.approveCom,
+);
 
 module.exports = router;

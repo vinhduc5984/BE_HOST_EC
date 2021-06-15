@@ -75,7 +75,7 @@ const SignupService = async (body) => {
             console.log(resSave);
             //create account
             const newAccount = new Account({
-              _id: resSave._id,
+              _id: resSave._id.toString(),
               Gmail,
               Password: hassPassword,
               Role: 'Customer',
@@ -188,7 +188,10 @@ const SigninService = async (body) => {
           return {
             msg: 'Sign In Successful ',
             statusCode: 200,
-            data: token,
+            data: {
+              Token: token,
+              Role: data.Role,
+            },
           };
         } else {
           return {

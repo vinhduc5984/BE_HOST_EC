@@ -44,7 +44,7 @@ const createAccounting = async (body) => {
                 objCom.Total = Number(bill[j].Cost) * 1000;
                 objCom.ExpensePayable =
                   Number(objCom.Total) *
-                  Number((100 - dataCom[i].Commission) / 100);
+                  Number((100 - Number(dataCom[i].Commission)) / 100);
               } else {
                 objCom.Id = CompanyID;
                 objCom.Number = Number(objCom.Number) + 1;
@@ -52,7 +52,7 @@ const createAccounting = async (body) => {
                   Number(objCom.Total) + Number(bill[j].Cost) * 1000;
                 objCom.ExpensePayable =
                   Number(objCom.Total) *
-                  Number((100 - dataCom[i].Commission) / 100);
+                  Number((100 - Number(dataCom[i].Commission)) / 100);
               }
             }
           }

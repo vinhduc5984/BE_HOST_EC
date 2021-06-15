@@ -18,8 +18,13 @@ const SchemaCompany = {
       Position: joi.string().required(),
     },
     Commission: joi.number(),
-    RegistrationPackage: joi.string(),
+    RegistrationPackage: joi.array().items(joi.object()),
     Status: joi.string(),
+  }),
+
+  approveCom: joi.object().keys({
+    Commission: joi.string().required(),
+    CompanyID: joi.string(),
   }),
 };
 module.exports = SchemaCompany;

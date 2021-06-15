@@ -4,6 +4,7 @@ const queryString = require('query-string');
 
 const paypal = require('paypal-rest-sdk');
 const Bill = require('../models/bill.Model');
+const Company = require('../models/company.Model');
 const JWT = require('../services/jwt.Service');
 
 paypal.configure({
@@ -36,7 +37,7 @@ const Payment = async (req, res, next) => {
   /*const TokenID = req.body.TokenID;     
       const  id1 = JWT.verify(TokenID); // ID người gửi 
       console.log("Verify token"+id1);*/
-  const id = 13;
+  const id = 14;
   const senderName = req.body.SenderName;
   const senderPhone = req.body.SenderPhone;
   const senderAddress = req.body.SernderAddress;
@@ -191,6 +192,10 @@ const PaymentSuccess = async (req, res, next) => {
           CancelDate: ' ',
         });
         const bill = await saveBill.save();
+        const dataCom = Company.findById(CompanyID);
+        if (dataCom) {
+          const l = dataCom.RegistrationPackage.length();
+        }
         console.log(JSON.stringify(payment));
         res.send('Success');
       }

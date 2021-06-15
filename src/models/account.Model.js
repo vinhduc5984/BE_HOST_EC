@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const AccountSchema = new schema({
-  _id: { type: Number },
+  _id: { type: String },
   Gmail: {
     type: String,
     unique: true,

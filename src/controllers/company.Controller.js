@@ -40,6 +40,19 @@ const GetListDataToVerify = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const GetListCompanyTrue = async (req, res, next) => {
+  const resService = await CompanyService.getListCompany();
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
 const createcostsheet = async (req, res, next) => {
   const resService = await CompanyService.creatCostSheet(req.body);
   if (resService.statusCode === 200) {
@@ -105,6 +118,19 @@ const deletekm = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const approveCom = async (req, res, next) => {
+  const resService = await CompanyService.approveCompany(req.body);
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
 module.exports = {
   signup,
   getdatacom,
@@ -114,4 +140,6 @@ module.exports = {
   deletecostsheet,
   deletekm,
   GetListDataToVerify,
+  GetListCompanyTrue,
+  approveCom,
 };

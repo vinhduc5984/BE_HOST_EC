@@ -10,6 +10,7 @@ const financial = require('./financial.Route');
 const promotion = require('./promotion.Route');
 const payment = require('./Payment.Route');
 const servicepackage = require('./servicepackage.Route');
+const statistic = require('./statistic.Route');
 
 router.use('/auth', customer);
 router.use('/user', user);
@@ -26,5 +27,7 @@ router.use('/', promotion);
 router.use('/payment', payment);
 
 router.use('/', servicepackage);
+
+router.use('/', statistic);
 
 module.exports = router;

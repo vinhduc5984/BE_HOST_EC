@@ -220,7 +220,7 @@ const createRevenue = async (body) => {
           OtherPayable,
           Profit,
         });
-        //await NewRevenue.save();
+        await NewRevenue.save();
         return {
           msg: 'Create Revenue Successful',
           statusCode: 200,

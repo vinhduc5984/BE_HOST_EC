@@ -26,5 +26,7 @@ app.use('/financial',route);
 app.use('/promotion',route);
 app.use('/servicepackage',route);
 
+app.use('/statistic',route);
+
 const port = process.env.PORT;
 app.listen(port,()=>console.log(`http://localhost:${port}`))

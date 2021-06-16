@@ -21,17 +21,21 @@ const createAccounting = async (body) => {
     } else {
       const dataCom = await company.find({});
       var objComs = [];
-      var TotalIncome = 0;
+      var TotalIncomeofBill = 0;
+      var TotalIncomeofServicePack = 0;
       var TotalPayable = 0;
+      var TotalActualExpenses = 0;
 
       var n = 0;
 
       for (const i in dataCom) {
         const CompanyID = dataCom[i]._id;
         const bill = await Bill.find({ CompanyID });
+        var objCom = {};
+        objCom.Id = CompanyID;
+        objCom.Number = 0;
+        objCom.TotalBillCost = 0;
         if (bill.length > 0) {
-          var objCom = {};
-
           for (const j in bill) {
             var ReceivedDate = bill[j].ReceivedDate;
             var receivedDate = ReceivedDate.split('/');
@@ -42,17 +46,17 @@ const createAccounting = async (body) => {
               Number(createDate[2]) == Number(receivedDate[2])
             ) {
               //chua co thi tao moi
-              if (Object.keys(objCom) <= 0) {
-                objCom.Id = CompanyID;
-                objCom.Number = 1;
-                objCom.Total = Number(bill[j].Cost) * 1000;
-                console.log(objCom.Number);
-              } else {
-                objCom.Id = CompanyID;
-                objCom.Number = Number(objCom.Number) + 1;
-                objCom.Total =
-                  Number(objCom.Total) + Number(bill[j].Cost) * 1000;
-              }
+              // if (Object.keys(objCom) <= 0) {
+              //   objCom.Id = CompanyID;
+              //   objCom.Number = 1;
+              //   objCom.TotalBillCost = Number(bill[j].Cost) * 1000;
+              //   console.log(objCom.Number);
+              // } else {
+              objCom.Id = CompanyID;
+              objCom.Number = Number(objCom.Number) + 1;
+              objCom.TotalBillCost =
+                Number(objCom.TotalBillCost) + Number(bill[j].Cost) * 1000;
+              //}
             }
           }
 
@@ -60,32 +64,51 @@ const createAccounting = async (body) => {
           const package = dataCom[i].RegistrationPackage;
           objCom.ServicePack = 0;
           //Công ty co dang ky goi dich vu =1 la su dung goi free
-          if (package.length > 1) {
-            const popPack = package.pop();
-            const RegisterDate = popPack.StartDate;
+          console.log(package.length);
+          while (package.length > 1) {
+            var popPack = package.pop();
+            var RegisterDate = popPack.StartDate;
             var registerDate = RegisterDate.split('/');
             //kiem tra ngay dang ky la cua thang nay
             if (
               Number(createDate[1]) == Number(registerDate[1]) &&
               Number(createDate[2]) == Number(registerDate[2])
             ) {
-              const PackageID = popPack.PackageID;
-              const servicepackage = await ServicePackage.findById(PackageID);
+              var PackageID = popPack.PackageID;
+              var servicepackage = await ServicePackage.findById(PackageID);
               if (servicepackage) {
-                objCom.ServicePack = servicepackage.Price;
+                objCom.ServicePack =
+                  Number(objCom.ServicePack) + Number(servicepackage.Price);
               }
+            } else {
+              break;
             }
           }
 
           objCom.ExpensePayable =
-            Number(objCom.Total) *
-              Number((100 - Number(dataCom[i].Commission)) / 100) -
-            Number(objCom.ServicePack);
+            Number(objCom.TotalBillCost) *
+            Number((100 - Number(dataCom[i].Commission)) / 100);
+          objCom.ActualExpenses =
+            Number(objCom.ExpensePayable) - Number(objCom.ServicePack);
           objComs[n] = objCom;
-          TotalIncome = Number(TotalIncome) + Number(objCom.Total);
+          TotalIncomeofBill =
+            Number(TotalIncomeofBill) + Number(objCom.TotalBillCost);
+          TotalIncomeofServicePack =
+            Number(TotalIncomeofServicePack) + Number(objCom.ServicePack);
           TotalPayable = Number(TotalPayable) + Number(objCom.ExpensePayable);
+          TotalActualExpenses =
+            Number(TotalActualExpenses) + Number(objCom.ActualExpenses);
           n++;
         }
+        // else{
+
+        //   objCom.ExpensePayable =0;
+        //   objCom.ActualExpenses=Number(objCom.DebtofServicePack);
+        //   objComs[n] = objCom;
+        //     TotalIncome = Number(TotalIncome) + Number(objCom.Total)+Number(objCom.ServicePack);
+        //     TotalPayable = Number(TotalPayable) + Number(objCom.ExpensePayable);
+        //     n++;
+        // }
       }
     }
     console.log(objComs);
@@ -93,8 +116,10 @@ const createAccounting = async (body) => {
     const NewAccounting = new Accounting({
       CreateDate,
       Company,
-      TotalIncome,
+      TotalIncomeofBill,
+      TotalIncomeofServicePack,
       TotalPayable,
+      TotalActualExpenses,
     });
     await NewAccounting.save();
     return {
@@ -198,7 +223,9 @@ const createRevenue = async (body) => {
           statusCode: 300,
         };
       } else {
-        const Income = accounting[0].TotalIncome;
+        const Income =
+          Number(accounting[0].TotalIncomeofBill) +
+          Number(accounting[0].TotalIncomeofServicePack);
         const TradeCreditors = accounting[0].TotalPayable;
         const Profit =
           Number(Income) - Number(TradeCreditors) - Number(OtherPayable);
@@ -209,7 +236,7 @@ const createRevenue = async (body) => {
           OtherPayable,
           Profit,
         });
-        await NewRevenue.save();
+        //await NewRevenue.save();
         return {
           msg: 'Create Revenue Successful',
           statusCode: 200,

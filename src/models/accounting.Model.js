@@ -12,12 +12,17 @@ const AccountingSchema = new schema({
       _id: String,
       Id: String,
       Number: { type: String, require: true },
-      Total: { type: String, require: true },
+      TotalBillCost: { type: String, require: true },
       ServicePack: { type: String, retuire: true },
       ExpensePayable: { type: String, require: true },
+      ActualExpenses: { type: String, require: true },
     },
   ],
-  TotalIncome: {
+  TotalIncomeofBill: {
+    type: String,
+    required: true,
+  },
+  TotalIncomeofServicePack: {
     type: String,
     required: true,
   },
@@ -25,6 +30,7 @@ const AccountingSchema = new schema({
     type: String,
     required: true,
   },
+  TotalActualExpenses: { type: String, require: true },
 });
 
 const Accounting = mongoose.model('Accounting', AccountingSchema);

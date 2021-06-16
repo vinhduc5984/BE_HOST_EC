@@ -39,4 +39,8 @@ router.post(
   customController.updateDataCustomer,
 );
 
+router.post('/createFeedBack', customController.createfeedback);
+
+router.post('/deleteFeedBack', customController.deletefeedback);
+
 module.exports = router;

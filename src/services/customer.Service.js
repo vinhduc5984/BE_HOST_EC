@@ -1,10 +1,12 @@
 const { createToken } = require('./jwt.Service');
 const { SendMailVetify } = require('./SendMail.Service');
 const bcrypt = require('bcrypt');
+const dateFormat = require('dateformat');
 
 const Customer = require('../models/customer.Model');
 const Account = require('../models/account.Model');
 const rand = require('random');
+const feedBack = require('../models/feedback.Model');
 // Sign UP
 const SignupService = async (body) => {
   let random = rand.int((min = 0), (max = 999999));
@@ -326,6 +328,57 @@ const UpdateDataCustomer = async (id, body) => {
   }
 };
 
+const createFeedback = async (body) => {
+  let { UserId, CompanyId, Description } = body;
+  try {
+    var now = new Date();
+    const createDate = dateFormat(now.setDate(now.getDate()), 'dd/mm/yyyy');
+    const newFeedBack = new feedBack({
+      UserId,
+      CompanyId,
+      Description,
+      CreateDate: createDate.toString(),
+    });
+    await newFeedBack.save();
+    return {
+      msg: 'Create FeedBack Successful!',
+      statusCode: 200,
+      data: newFeedBack,
+    };
+  } catch (err) {
+    return {
+      msg: 'Error whilte Create FeedBack',
+      statusCode: 300,
+    };
+  }
+};
+
+const deleteFeedback = async (body) => {
+  let { _id } = body;
+  try {
+    const Feedback = await feedBack.find({ _id });
+    console.log(Feedback);
+    if (Feedback.length <= 0) {
+      return {
+        msg: 'not found feedback',
+        statusCode: 300,
+      };
+    } else {
+      await feedBack.deleteOne({ _id });
+      return {
+        msg: 'delete feedback successful',
+        statusCode: 200,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      msg: 'Error while delete feedback',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
   SigninService,
@@ -334,4 +387,6 @@ module.exports = {
   ChangePasswordService,
   getUserData,
   UpdateDataCustomer,
+  createFeedback,
+  deleteFeedback,
 };

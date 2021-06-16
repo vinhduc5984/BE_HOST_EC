@@ -6,6 +6,7 @@ const Company = require('../models/company.Model');
 const CostSheet = require('../models/costSheet.Model');
 const Account = require('../models/account.Model');
 const { findById } = require('../models/company.Model');
+const feedBack = require('../models/feedback.Model');
 
 const SignupService = async (body) => {
   let {
@@ -383,6 +384,30 @@ const approveCompany = async (body) => {
   }
 };
 
+const getFeedback = async (body) => {
+  let { CompanyId } = body;
+  try {
+    const company = await feedBack.find({ CompanyId });
+    if (company.length > 0) {
+      return {
+        msg: 'get FeedBack Successful!',
+        statusCode: 200,
+        data: company,
+      };
+    } else {
+      return {
+        msg: 'Company not have FeedBack',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    return {
+      msg: 'Error whilte get FeedBack',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
   getDataCompanies,
@@ -394,4 +419,5 @@ module.exports = {
   deleteCostSheet,
   deleteKm,
   approveCompany,
+  getFeedback,
 };

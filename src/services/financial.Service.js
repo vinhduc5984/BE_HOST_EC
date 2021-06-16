@@ -45,13 +45,6 @@ const createAccounting = async (body) => {
               Number(createDate[1]) == Number(receivedDate[1]) &&
               Number(createDate[2]) == Number(receivedDate[2])
             ) {
-              //chua co thi tao moi
-              // if (Object.keys(objCom) <= 0) {
-              //   objCom.Id = CompanyID;
-              //   objCom.Number = 1;
-              //   objCom.TotalBillCost = Number(bill[j].Cost) * 1000;
-              //   console.log(objCom.Number);
-              // } else {
               objCom.Id = CompanyID;
               objCom.Number = Number(objCom.Number) + 1;
               objCom.TotalBillCost =
@@ -100,15 +93,6 @@ const createAccounting = async (body) => {
             Number(TotalActualExpenses) + Number(objCom.ActualExpenses);
           n++;
         }
-        // else{
-
-        //   objCom.ExpensePayable =0;
-        //   objCom.ActualExpenses=Number(objCom.DebtofServicePack);
-        //   objComs[n] = objCom;
-        //     TotalIncome = Number(TotalIncome) + Number(objCom.Total)+Number(objCom.ServicePack);
-        //     TotalPayable = Number(TotalPayable) + Number(objCom.ExpensePayable);
-        //     n++;
-        // }
       }
     }
     console.log(objComs);

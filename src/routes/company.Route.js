@@ -24,5 +24,6 @@ router.post(
   validate.validateBody(SchemaCompany.approveCom),
   companyController.approveCom,
 );
+router.post('/getfeedback', companyController.getfeedback);
 
 module.exports = router;

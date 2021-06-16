@@ -131,6 +131,19 @@ const approveCom = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const getfeedback = async (req, res, next) => {
+  const resService = await CompanyService.getFeedback(req.body);
+  if (resService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      resService.data,
+      resService.statusCode,
+      resService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
+};
+
 module.exports = {
   signup,
   getdatacom,
@@ -142,4 +155,5 @@ module.exports = {
   GetListDataToVerify,
   GetListCompanyTrue,
   approveCom,
+  getfeedback,
 };

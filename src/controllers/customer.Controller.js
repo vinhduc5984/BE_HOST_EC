@@ -105,6 +105,32 @@ const updateDataCustomer = async (req, res, next) => {
   return controller.sendSuccess(res, {}, resService.statusCode, resService.msg);
 };
 
+const createfeedback = async (req, res, next) => {
+  const ResService = await customerService.createFeedback(req.body);
+  if (ResService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      ResService.data,
+      ResService.statusCode,
+      ResService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, ResService.statusCode, ResService.msg);
+};
+
+const deletefeedback = async (req, res, next) => {
+  const ResService = await customerService.deleteFeedback(req.body);
+  if (ResService.statusCode === 200) {
+    return controller.sendSuccess(
+      res,
+      ResService.data,
+      ResService.statusCode,
+      ResService.msg,
+    );
+  }
+  return controller.sendSuccess(res, {}, ResService.statusCode, ResService.msg);
+};
+
 module.exports = {
   signup,
   signin,
@@ -113,4 +139,6 @@ module.exports = {
   changepassword,
   getDataUSer,
   updateDataCustomer,
+  createfeedback,
+  deletefeedback,
 };

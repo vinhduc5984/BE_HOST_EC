@@ -6,6 +6,7 @@ const Company = require('../models/company.Model');
 const CostSheet = require('../models/costSheet.Model');
 const Account = require('../models/account.Model');
 const { findById } = require('../models/company.Model');
+const feedBack = require('../models/feedback.Model');
 
 const SignupService = async (body) => {
   let {
@@ -22,6 +23,7 @@ const SignupService = async (body) => {
   BusinessLicense = BusinessLicense.trim();
   Logo = Logo.trim();
   Addrexss = Address.trim();
+
   console.log(CompanyGmail);
   // check exist Gmail
   try {
@@ -121,6 +123,30 @@ const getListCompanyToVerify = async () => {
     };
   }
 };
+
+/*const getListCompany = async () => {
+  // get list company with status = true
+  const DataCom = await Company.find({ Status: 'true' });
+  const length = DataCom.length;
+  const DataCompany = [];
+  if (length == 0) {
+    return {
+      msg: 'Not get list data Company',
+      statusCode: 300,
+    };
+  } else {
+    for (let i = 0; i < length; i++) {
+      //console.log(DataCom[i]._id);
+      DataCompany.push(DataCom[i]);
+    }
+    console.log(length);
+    return {
+      msg: 'get list data Company Successful',
+      statusCode: 200,
+      data: DataCompanyID,
+    };
+  }
+};*/
 
 const getListCompany = async () => {
   // get list company with status = true
@@ -382,6 +408,30 @@ const approveCompany = async (body) => {
   }
 };
 
+const getFeedback = async (body) => {
+  let { CompanyId } = body;
+  try {
+    const company = await feedBack.find({ CompanyId });
+    if (company.length > 0) {
+      return {
+        msg: 'get FeedBack Successful!',
+        statusCode: 200,
+        data: company,
+      };
+    } else {
+      return {
+        msg: 'Company not have FeedBack',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    return {
+      msg: 'Error whilte get FeedBack',
+      statusCode: 300,
+    };
+  }
+};
+
 module.exports = {
   SignupService,
   getListCompanyToVerify,
@@ -394,4 +444,5 @@ module.exports = {
   deleteCostSheet,
   deleteKm,
   approveCompany,
+  getFeedback,
 };

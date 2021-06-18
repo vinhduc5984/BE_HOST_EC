@@ -97,10 +97,12 @@ const caculatorCost = async (body) => {
       const dataCom = await company.findById(id);
       const package = dataCom.RegistrationPackage;
       const popPack = package.pop();
-      var today = dateFormat(now.setDate(), 'dd/mm/yyyy');
-      console.log(today);
+      var PackDate = popPack.EndDate;
+      var packDate = PackDate.split('/');
+      packDate = new Date(packDate[2], packDate[1] - 1, packDate[0]);
+      //var today = dateFormat(now.setDate(), 'dd/mm/yyyy');
       //Gói công ty đang đăng ký còn dùng được
-      if (Number(popPack.Quantity) > 0 && popPack.EndDate >= today) {
+      if (Number(popPack.Quantity) > 0 && packDate >= now) {
         const cost = data.Cost;
         const kg = Number(data.Kg);
         var sur = 0;

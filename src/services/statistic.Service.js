@@ -8,8 +8,10 @@ const RevenueStatistic = async (body) => {
     var n = 0;
     var arrRevenues = [];
     var objRevenue = {};
-    var fromDate = '01/01/' + Value.toString();
-    var toDate = '31/12/' + Value.toString();
+    var fromDate = new Date(Value.toString() + '/01/01');
+    var toDate = new Date(Value.toString() + '/12/31');
+    console.log(fromDate);
+    console.log(toDate);
 
     var month = [
       '01',
@@ -40,13 +42,11 @@ const RevenueStatistic = async (body) => {
     for (const i in revenue) {
       objRevenue = {};
       const data = revenue[i];
-      console.log(data);
-
-      if (data.CreateDate >= fromDate && data.CreateDate <= toDate) {
-        var createDate = data.CreateDate;
-        var CreateDate = createDate.split('/');
-
-        objRevenue.Month = CreateDate[1];
+      var createDate = data.CreateDate;
+      var CreateDate = createDate.split('/');
+      CreateDate = new Date(CreateDate[2], CreateDate[1] - 1, CreateDate[0]);
+      if (CreateDate >= fromDate && CreateDate <= toDate) {
+        objRevenue.Month = CreateDate.getMonth() + 1;
         objRevenue.InCome = data.Income;
         objRevenue.Expenditure =
           Number(data.TradeCreditors) + Number(data.OtherPayable);

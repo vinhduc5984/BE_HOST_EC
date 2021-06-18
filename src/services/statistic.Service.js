@@ -1,5 +1,7 @@
 const dateFormat = require('dateformat');
 const Revenue = require('../models/revenue.Model');
+const Bill = require('../models/bill.Model');
+const Account = require('../models/account.Model');
 
 const RevenueStatistic = async (body) => {
   let { Value } = body;
@@ -72,4 +74,163 @@ const RevenueStatistic = async (body) => {
   }
 };
 
-module.exports = { RevenueStatistic };
+// thống kê danh sách đơn trạng thái chờ xác nhận (theo tháng)
+const InvoiceStatisticChoXacNhan = async (tokenID) => {
+  const id = +tokenID;
+  const roleUser = await Account.findOne({ _id: id });
+  console.log(roleUser);
+  try {
+    if (roleUser) {
+      if (roleUser.Role === 'Admin') {
+        const _Bill = await Bill.aggregate([
+          { $match: { Status: 'Cho Xac Nhan' } }, // kiểm tra đk đúng
+          /*{
+          $project: {
+            month: {$month: { $toDate: '$CreateDate' } }
+          }
+       },*/
+          /*{$group: { // groupby theo id
+          _id: {$substr: ['$bookingdatetime', 5, 2]}, 
+          numberofbookings: {$sum: 1}
+      }}*/
+        ]);
+        const newBill = _Bill.reduce((t, v) => {
+          //console.log(t);
+
+          const month = +v.CreateDate.split('/')[1];
+          //console.log(month);
+          t[month - 1] = t[month - 1] + 1;
+
+          return t;
+        }, new Array(12).fill(0));
+
+        console.log(_Bill);
+        return {
+          msg: "get bill status = 'Cho Xac Nhan' success",
+          statusCode: 200,
+          data: newBill,
+        };
+      }
+    } else {
+      return {
+        msg: 'get status bill false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// thống kê danh sách đơn trạng thái Đang giao (theo tháng)
+const InvoiceStatisticDangGiao = async (tokenID) => {
+  const id = +tokenID;
+  const roleUser = await Account.findOne({ _id: id });
+  console.log(roleUser);
+  try {
+    if (roleUser) {
+      if (roleUser.Role === 'Admin') {
+        const _Bill = await Bill.aggregate([
+          { $match: { Status: 'Dang Giao' } }, // kiểm tra đk đúng
+        ]);
+        const newBill = _Bill.reduce((t, v) => {
+          const month = +v.CreateDate.split('/')[1];
+          t[month - 1] = t[month - 1] + 1;
+          return t;
+        }, new Array(12).fill(0));
+
+        console.log(_Bill);
+        return {
+          msg: "get bill status = 'Dang Giao' success",
+          statusCode: 200,
+          data: newBill,
+        };
+      }
+    } else {
+      return {
+        msg: 'get status bill false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// thống kê danh sách đơn trạng thái Đã giao (theo tháng)
+const InvoiceStatisticDaGiao = async (tokenID) => {
+  const id = +tokenID;
+  const roleUser = await Account.findOne({ _id: id });
+  console.log(roleUser);
+  try {
+    if (roleUser) {
+      if (roleUser.Role === 'Admin') {
+        const _Bill = await Bill.aggregate([
+          { $match: { Status: 'Da Giao' } }, // kiểm tra đk đúng
+        ]);
+        const newBill = _Bill.reduce((t, v) => {
+          const month = +v.CreateDate.split('/')[1];
+          t[month - 1] = t[month - 1] + 1;
+          return t;
+        }, new Array(12).fill(0));
+
+        console.log(_Bill);
+        return {
+          msg: "get bill status = 'Da giao' success",
+          statusCode: 200,
+          data: newBill,
+        };
+      }
+    } else {
+      return {
+        msg: 'get status bill false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// thống kê danh sách đơn trạng thái Đã Hủy (theo tháng)
+const InvoiceStatisticDaHuy = async (tokenID) => {
+  const id = +tokenID;
+  const roleUser = await Account.findOne({ _id: id });
+  console.log(roleUser);
+  try {
+    if (roleUser) {
+      if (roleUser.Role === 'Admin') {
+        const _Bill = await Bill.aggregate([
+          { $match: { Status: 'Da Huy' } }, // kiểm tra đk đúng
+        ]);
+        const newBill = _Bill.reduce((t, v) => {
+          const month = +v.CreateDate.split('/')[1];
+          t[month - 1] = t[month - 1] + 1;
+          return t;
+        }, new Array(12).fill(0));
+
+        console.log(_Bill);
+        return {
+          msg: "get bill status = 'Da Huy' success",
+          statusCode: 200,
+          data: newBill,
+        };
+      }
+    } else {
+      return {
+        msg: 'get status bill false',
+        statusCode: 300,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = {
+  RevenueStatistic,
+  InvoiceStatisticChoXacNhan,
+  InvoiceStatisticDangGiao,
+  InvoiceStatisticDaGiao,
+  InvoiceStatisticDaHuy,
+};

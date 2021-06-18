@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const BillSchema = new Schema({
   Sender: {
     id: {
-      type: Number,
+      type: String,
     },
     Name: {
       type: String,

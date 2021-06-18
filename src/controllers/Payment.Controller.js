@@ -14,7 +14,7 @@ paypal.configure({
 });
 const Payment = async (req, res, next) => {
   const transactions = req.body.price;
-  const tokenID = req.value.body.token.data;
+  //const tokenID = req.value.body.token.data;
   console.log(transactions);
   const dollar = transactions / 23000;
   console.log(dollar);
@@ -37,7 +37,7 @@ const Payment = async (req, res, next) => {
   /*const TokenID = req.body.TokenID;     
       const  id1 = JWT.verify(TokenID); // ID người gửi 
       console.log("Verify token"+id1);*/
-  const id = tokenID;
+  const id = '60cc43d16c789b2ea41960e3';
   const senderName = req.body.SenderName;
   const senderPhone = req.body.SenderPhone;
   const senderAddress = req.body.SernderAddress;
@@ -192,9 +192,24 @@ const PaymentSuccess = async (req, res, next) => {
           CancelDate: ' ',
         });
         const bill = await saveBill.save();
-        const dataCom = Company.findById(CompanyID);
+        const dataCom = JSON.parse(
+          JSON.stringify(await Company.findById(CompanyID)),
+        );
+        const idC = dataCom._id;
+        delete dataCom._id;
+
         if (dataCom) {
-          const l = dataCom.RegistrationPackage.length();
+          const l = dataCom.RegistrationPackage.length;
+          const lAfterCreateBill =
+            dataCom.RegistrationPackage[l - 1].Quantity - 1;
+
+          dataCom.RegistrationPackage[l - 1].Quantity = lAfterCreateBill;
+
+          const isSave = await Company.findByIdAndUpdate(idC, dataCom);
+
+          // const cuscess = await dataCom.save();
+          console.log('Save duoc roi nha', isSave);
+          // console.log("After Create",lAfterCreateBill);
         }
         console.log(JSON.stringify(payment));
         res.send('Success');

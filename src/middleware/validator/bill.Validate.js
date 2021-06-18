@@ -3,7 +3,7 @@ const joi = require('@hapi/joi');
 const SchemaBill = {
   createbill: joi.object().keys({
     Sender: {
-      id: joi.number().required(),
+      id: joi.string().required(),
       Name: joi.string().required(),
       Phone: joi.string().required(),
       Address: joi.string().required(),

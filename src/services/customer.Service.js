@@ -77,7 +77,7 @@ const SignupService = async (body) => {
             console.log(resSave);
             //create account
             const newAccount = new Account({
-              _id: resSave._id.toString(),
+              _id: resSave._id,
               Gmail,
               Password: hassPassword,
               Role: 'Customer',
@@ -223,7 +223,7 @@ const ForgetPasswordService = async (body) => {
     Gmail = Gmail.trim();
     const data = await Account.findOne({ Gmail });
     const dataCus = await Customer.findOne({ Gmail });
-    let random = rand.int((min = 0), (max = 999999));
+    let random = rand.int((min = 100000), (max = 999999));
     random = random + '';
     if (data) {
       const saltOrRound = 8;
@@ -313,13 +313,15 @@ const getUserData = async (body) => {
 const UpdateDataCustomer = async (id, body) => {
   try {
     console.log(id);
-    const data = await Customer.findOneAndUpdate({ _id: ~~id }, body);
+    console.log(typeof id);
+    console.log('Body', body);
+    const data = await Customer.findByIdAndUpdate(id, body);
     console.log(data);
     //check data null
     return {
-      msg: 'update Data Customer',
+      msg: 'update Data Customer success',
       statusCode: 200,
-      data: data,
+      //data: data,
     };
   } catch (err) {
     console.log(err);

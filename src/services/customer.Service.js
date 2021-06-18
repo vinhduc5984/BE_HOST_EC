@@ -295,9 +295,7 @@ const getUserData = async (body) => {
   let { id } = body;
   console.log(id);
   console.log(typeof id);
-  const data = await Customer.findOne({
-    _id: mongoose.SchemaType.ObjectID(id),
-  });
+  const data = await Customer.findById(id).exec();
   if (!data) {
     return {
       msg: 'Error whilte get data User',

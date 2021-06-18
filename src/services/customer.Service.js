@@ -2,7 +2,7 @@ const { createToken } = require('./jwt.Service');
 const { SendMailVetify } = require('./SendMail.Service');
 const bcrypt = require('bcrypt');
 const dateFormat = require('dateformat');
-
+const mongoose = require('mongoose');
 const Customer = require('../models/customer.Model');
 const Account = require('../models/account.Model');
 const rand = require('random');
@@ -293,7 +293,11 @@ const ChangePasswordService = async (IDToken, body) => {
 
 const getUserData = async (body) => {
   let { id } = body;
-  const data = await Customer.findOne({ _id: id });
+  console.log(id);
+  console.log(typeof id);
+  const data = await Customer.findOne({
+    _id: mongoose.SchemaType.ObjectID(id),
+  });
   if (!data) {
     return {
       msg: 'Error whilte get data User',

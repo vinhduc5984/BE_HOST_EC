@@ -14,7 +14,7 @@ paypal.configure({
 });
 const Payment = async (req, res, next) => {
   const transactions = req.body.price;
-  //const tokenID = req.value.body.token.data;
+  const tokenID = req.value.body.token.data;
   console.log(transactions);
   const dollar = transactions / 23000;
   console.log(dollar);
@@ -37,7 +37,7 @@ const Payment = async (req, res, next) => {
   /*const TokenID = req.body.TokenID;     
       const  id1 = JWT.verify(TokenID); // ID người gửi 
       console.log("Verify token"+id1);*/
-  const id = '20';
+  const id = tokenID;
   const senderName = req.body.SenderName;
   const senderPhone = req.body.SenderPhone;
   const senderAddress = req.body.SernderAddress;

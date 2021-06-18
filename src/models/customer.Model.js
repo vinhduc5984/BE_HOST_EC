@@ -4,9 +4,6 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const CustommerSchema = new Schema(
   {
-    _id: {
-      type: Number,
-    },
     FirstName: {
       type: String,
       required: true,
@@ -47,11 +44,10 @@ const CustommerSchema = new Schema(
     },
   },
   {
-    _id: false,
     timestamps: true,
   },
 );
 
-CustommerSchema.plugin(AutoIncrement); // này cho trường tăng tự động _id
+//CustommerSchema.plugin(AutoIncrement); // này cho trường tăng tự động _id
 const Customer = mongoose.model('Customer', CustommerSchema);
 module.exports = Customer;
